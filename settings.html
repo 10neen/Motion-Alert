@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="h1-settings">إعدادات الحماية الشخصية</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <h1 id="h1-settings">إعدادات الحماية الشخصية</h1>
+  <p id="p-settings">نظام الحماية ضد الحركة</p>
+
+  <div class="settings-container">
+    
+    <div class="control-group">
+      <label for="lang-selector" id="label-language">اختيار اللغة:</label>
+      <select id="lang-selector">
+        <option value="ar" id="lang-option-ar">العربية</option>
+        <option value="en" id="lang-option-en">الإنجليزية</option>
+        <option value="fr" id="lang-option-fr">الفرنسية</option>
+        <option value="de" id="lang-option-de">الألمانية</option>
+        <option value="es" id="lang-option-es">الإسبانية</option>
+        <option value="it" id="lang-option-it">الإيطالية</option>
+        <option value="zh" id="lang-option-zh">الصينية</option>
+        <option value="hi" id="lang-option-hi">الهندية</option>
+      </select>
+    </div>
+
+    <h3 id="h3-account">إعدادات الحساب</h3>
+    <label for="user-name" id="label-name">الاسم:</label>
+    <input type="text" id="user-name" placeholder="أدخل اسمك">
+    
+    <label for="mobile-number" id="label-mobile">رقم الموبايل:</label>
+    <input type="tel" id="mobile-number" placeholder="أدخل رقم الموبايل">
+    
+    <h3 id="h3-pin">إعداد كلمة السر</h3>
+    <label for="new-pin" id="label-new-pin">كلمة السر الجديدة:</label>
+    <input type="password" id="new-pin" placeholder="أدخل كلمة السر">
+
+    <label for="confirm-pin" id="label-confirm-pin">إعادة إدخال كلمة السر:</label>
+    <input type="password" id="confirm-pin" placeholder="أعد إدخال كلمة السر">
+
+    <h3 id="h3-sound">إعدادات صوت التنبيه</h3>
+    
+    <div class="control-group">
+      <label for="sound-select-settings" id="label-sound-select">اختر صوت التنبيه:</label>
+      <select id="sound-select-settings">
+        <option value="alert.mp3" id="sound-option-1-settings">تنبيه 1</option>
+        <option value="alert2.mp3" id="sound-option-2-settings">تنبيه 2</option>
+        <option value="alert3.mp3" id="sound-option-3-settings">تنبيه 3</option>
+        <option value="custom" id="sound-option-custom-settings">صوت مخصص</option>
+      </select>
+    </div>
+
+    <div id="custom-sound-file-container" style="display:none;">
+      <label for="custom-sound-file" id="label-sound-file">رفع ملف صوتي مخصص:</label>
+      <input type="file" id="custom-sound-file" accept="audio/*">
+    </div>
+
+    <button id="save-settings-btn" class="btn-primary">حفظ الإعدادات</button>
+  </div>
+  
+  <!-- Custom Message Modal -->
+  <div id="message-modal" class="modal">
+    <div class="modal-content">
+      <h3 id="message-title"></h3>
+      <p id="message-text"></p>
+      <button id="message-modal-ok" class="btn-primary" onclick="hideMessageModal()">موافق</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

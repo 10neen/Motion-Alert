@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="h1-index">نظام الحماية ضد الحركة</title>
+    <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
+</head>
+<body>
+
+    <h1 id="h1-index">نظام الحماية ضد الحركة</h1>
+    <p id="p-index">رفيقك في الأمان الشخصي</p>
+
+    <div class="main-container">
+
+        <div id="motionStatus" class="status-box inactive">الحماية متوقفة</div>
+
+        <div class="controls-container">
+            <div class="control-group">
+                <h4 id="h4-sensitivity">حساسية الحركة</h4>
+                <div class="slider-group">
+                    <label for="sensitivity-x" id="label-x">محور X:</label>
+                    <div class="slider-with-buttons">
+                        <button class="slider-btn minus" id="minus-x">-</button>
+                        <input type="range" id="sensitivity-x" min="1" max="100" value="10">
+                        <button class="slider-btn plus" id="plus-x">+</button>
+                        <span id="value-x">10</span>
+                    </div>
+                </div>
+                <div class="slider-group">
+                    <label for="sensitivity-y" id="label-y">محور Y:</label>
+                    <div class="slider-with-buttons">
+                        <button class="slider-btn minus" id="minus-y">-</button>
+                        <input type="range" id="sensitivity-y" min="1" max="100" value="10">
+                        <button class="slider-btn plus" id="plus-y">+</button>
+                        <span id="value-y">10</span>
+                    </div>
+                </div>
+                <div class="slider-group">
+                    <label for="sensitivity-z" id="label-z">محور Z:</label>
+                    <div class="slider-with-buttons">
+                        <button class="slider-btn minus" id="minus-z">-</button>
+                        <input type="range" id="sensitivity-z" min="1" max="100" value="10">
+                        <button class="slider-btn plus" id="plus-z">+</button>
+                        <span id="value-z">10</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons-container">
+            <button id="activateButton" class="btn-primary">تفعيل الحماية</button>
+            <button id="deactivateButton" class="btn-secondary" disabled>إلغاء الحماية</button>
+            <button id="settingsButton" class="btn-link">الإعدادات</button>
+        </div>
+
+    </div>
+
+    <!-- PIN Modal for Deactivation -->
+    <div id="pin-modal-index" class="modal">
+        <div class="modal-content">
+            <h3 id="pin-modal-title-index">أدخل كلمة السر</h3>
+            <input type="password" id="pin-input-index" placeholder="كلمة السر">
+            <div class="modal-buttons">
+                <button id="pin-submit-btn-index" class="btn-primary">موافق</button>
+                <button id="return-from-deactivate" class="btn-secondary">عودة</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PIN Modal for Settings -->
+    <div id="pin-modal-settings" class="modal">
+        <div class="modal-content">
+            <h3 id="pin-modal-title-settings">أدخل كلمة السر</h3>
+            <input type="password" id="pin-input-settings" placeholder="كلمة السر">
+            <div class="modal-buttons">
+                <button id="pin-submit-btn-settings" class="btn-primary">موافق</button>
+                <button id="return-from-settings" class="btn-secondary">عودة</button>
+                <!-- إضافة زر "نسيت كلمة السر" -->
+                <button id="pin-forgot-btn" class="btn-secondary">نسيت كلمة السر؟</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Message Modal -->
+    <div id="message-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="message-title"></h3>
+            <p id="message-text"></p>
+            <button id="message-modal-ok" class="btn-primary" onclick="hideMessageModal()">موافق</button>
+        </div>
+    </div>
+    
+	<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => console.log('Service Worker registered ✅'))
+      .catch(err => console.error('Service Worker failed ❌', err));
+  }
+</script>
+
+	
+    <script src="app.js"></script>
+</body>
+</html>

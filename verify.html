@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="h1-verify">نسيت كلمة السر؟</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <h1 id="h1-verify">نسيت كلمة السر؟</h1>
+  <p id="p-verify">برجاء إدخال الاسم ورقم الموبايل المسجل للتحقق.</p>
+
+  <div class="settings-container">
+    <label for="recovery-username" id="label-recovery-username">الاسم:</label>
+    <input type="text" id="recovery-username" placeholder="أدخل اسمك">
+    
+    <label for="recovery-mobile" id="label-recovery-mobile">رقم الموبايل:</label>
+    <input type="tel" id="recovery-mobile" placeholder="أدخل رقم الموبايل">
+    
+    <button id="verify-mobile-btn" class="btn-primary">تحقق</button>
+    
+    <div id="new-pin-container" style="display:none; margin-top: 20px;">
+      <h3 id="h3-reset-pin">إعادة تعيين كلمة السر</h3>
+      <label for="new-recovery-pin" id="label-new-pin-recovery">كلمة السر الجديدة:</label>
+      <input type="password" id="new-recovery-pin" placeholder="أدخل كلمة السر الجديدة">
+      
+      <label for="confirm-recovery-pin" id="label-confirm-pin-recovery">إعادة إدخال كلمة السر:</label>
+      <input type="password" id="confirm-recovery-pin" placeholder="أعد إدخال كلمة السر">
+      
+      <button id="save-new-pin-btn" class="btn-primary">حفظ كلمة السر الجديدة</button>
+    </div>
+    
+    <button id="back-btn" class="btn-secondary" style="margin-top: 10px;">رجوع</button>
+  </div>
+  
+  <!-- Custom Message Modal -->
+  <div id="message-modal" class="modal">
+    <div class="modal-content">
+      <h3 id="message-title"></h3>
+      <p id="message-text"></p>
+      <button id="message-modal-ok" class="btn-primary" onclick="hideMessageModal()">موافق</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
