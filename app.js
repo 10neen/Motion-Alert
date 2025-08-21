@@ -1264,77 +1264,122 @@
             }
         });
 
-        // ----------------------------------------------------
-        // End of Back Button & Power Button Prevention Logic
-        // ----------------------------------------------------
+
+
+// ----------------------------------------------------
+// End of Back Button & Power Button Prevention Logic
+// ----------------------------------------------------
+
+loadSettings();
+updateUI('inactive');
+requestNotificationPermission();
+resetIdleTimer(); // Start the idle timer initially
+
+// دالة التعامل مع الحركة
+function handleMotion(event) {
+    resetIdleTimer();
+
+    if (!alertEnabled && !isArmed) return;
+
+    let acc = event.accelerationIncludingGravity;
+    let currentTime = Date.now();
+
+    if ((Math.abs(acc.x) > currentThreshold.x || 
+        Math.abs(acc.y) > currentThreshold.y || 
+        Math.abs(acc.z) > currentThreshold.z)) {
         
-        loadSettings();
-        updateUI('inactive');
-        requestNotificationPermission();
-        resetIdleTimer(); // Start the idle timer initially
-    }
-
-    if (isVerifyPage) {
-        const recoveryMobileInput = document.getElementById('recovery-mobile');
-        const verifyMobileBtn = document.getElementById('verify-mobile-btn');
-        const newPinContainer = document.getElementById('new-pin-container');
-        const newRecoveryPinInput = document.getElementById('new-recovery-pin');
-        const confirmRecoveryPinInput = document.getElementById('confirm-recovery-pin');
-        const saveNewPinBtn = document.getElementById('save-new-pin-btn');
-        const backBtn = document.getElementById('back-btn');
-        const userNameInput = document.getElementById('recovery-username');
-
-        verifyMobileBtn.addEventListener('click', () => {
-            const recoveryMobile = recoveryMobileInput.value.trim();
-            const userName = userNameInput.value.trim();
-            const savedSettings = JSON.parse(localStorage.getItem('motionAlertSettings'));
-            const savedMobileNumber = savedSettings.mobileNumber;
-            const savedUserName = savedSettings.userName;
-
-            if (recoveryMobile === savedMobileNumber && userName === savedUserName) {
-                showMessageModal(translations[currentLang].h1_verify, translations[currentLang].verification_success);
-                newPinContainer.style.display = 'block';
-                verifyMobileBtn.disabled = true;
-                recoveryMobileInput.disabled = true;
-                userNameInput.disabled = true;
-            } else {
-                showMessageModal(translations[currentLang].h1_verify, translations[currentLang].verification_error);
-            }
-        });
-
-        saveNewPinBtn.addEventListener('click', () => {
-            const newPin = newRecoveryPinInput.value.trim();
-            const confirmPin = confirmRecoveryPinInput.value.trim();
-
-            if (!newPin || !confirmPin) {
-                showMessageModal(translations[currentLang].h1_verify, translations[currentLang].fill_all_fields);
-                return;
-            }
-
-            if (newPin !== confirmPin) {
-                showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_mismatch);
-                return;
-            }
-
-            if (newPin.length < 4) {
-                showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_length_error);
-                return;
-            }
-
-            const savedSettings = JSON.parse(localStorage.getItem('motionAlertSettings'));
-            savedSettings.securityPin = newPin;
-            localStorage.setItem('motionAlertSettings', JSON.stringify(savedSettings));
-
-            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_save_success);
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
-        });
- 
-        if (backBtn) {
-            backBtn.addEventListener('click', () => {
-                window.location.href = 'index.html';
-            });
+        if (alertEnabled && (currentTime - lastAlertTime > alertCooldown)) {
+            lastAlertTime = currentTime;
+            motionStatus.textContent = '🚨 ' + translations[currentLang].motion_detected;
+            audio.play();
+            sendNotification(translations[currentLang].motion_detected);
+        } else if (isArmed) {
+            alertEnabled = true;
+            isArmed = false;
+            updateUI('active');
+            motionStatus.textContent = '🚨 ' + translations[currentLang].motion_detected;
+            audio.play();
+            sendNotification(translations[currentLang].motion_detected);
         }
     }
+}
+
+// طلب إذن لاستخدام حساس الحركة (مطلوب على iOS وبعض المتصفحات)
+if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission()
+        .then(response => {
+            if (response === 'granted') {
+                window.addEventListener('devicemotion', handleMotion);
+            } else {
+                showMessageModal('إذن مرفوض', 'لن يتمكن التطبيق من كشف الحركة بدون إذن.');
+            }
+        })
+        .catch(console.error);
+} else {
+    window.addEventListener('devicemotion', handleMotion);
+}
+
+if (isVerifyPage) {
+    const recoveryMobileInput = document.getElementById('recovery-mobile');
+    const verifyMobileBtn = document.getElementById('verify-mobile-btn');
+    const newPinContainer = document.getElementById('new-pin-container');
+    const newRecoveryPinInput = document.getElementById('new-recovery-pin');
+    const confirmRecoveryPinInput = document.getElementById('confirm-recovery-pin');
+    const saveNewPinBtn = document.getElementById('save-new-pin-btn');
+    const backBtn = document.getElementById('back-btn');
+    const userNameInput = document.getElementById('recovery-username');
+
+    verifyMobileBtn.addEventListener('click', () => {
+        const recoveryMobile = recoveryMobileInput.value.trim();
+        const userName = userNameInput.value.trim();
+        const savedSettings = JSON.parse(localStorage.getItem('motionAlertSettings'));
+        const savedMobileNumber = savedSettings.mobileNumber;
+        const savedUserName = savedSettings.userName;
+
+        if (recoveryMobile === savedMobileNumber && userName === savedUserName) {
+            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].verification_success);
+            newPinContainer.style.display = 'block';
+            verifyMobileBtn.disabled = true;
+            recoveryMobileInput.disabled = true;
+            userNameInput.disabled = true;
+        } else {
+            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].verification_error);
+        }
+    });
+
+    saveNewPinBtn.addEventListener('click', () => {
+        const newPin = newRecoveryPinInput.value.trim();
+        const confirmPin = confirmRecoveryPinInput.value.trim();
+
+        if (!newPin || !confirmPin) {
+            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].fill_all_fields);
+            return;
+        }
+
+        if (newPin !== confirmPin) {
+            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_mismatch);
+            return;
+        }
+
+        if (newPin.length < 4) {
+            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_length_error);
+            return;
+        }
+
+        const savedSettings = JSON.parse(localStorage.getItem('motionAlertSettings'));
+        savedSettings.securityPin = newPin;
+        localStorage.setItem('motionAlertSettings', JSON.stringify(savedSettings));
+
+        showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_save_success);
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 2000);
+    });
+
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    }
+}
 });
