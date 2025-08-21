@@ -1,7 +1,8 @@
+/* الأساسيات */
 body {
     font-family: Arial, sans-serif;
-    background-color: #2C3E50; /* Dark Blue-Gray */
-    color: #ECF0F1; /* Off-White */
+    background-color: #2C3E50;
+    color: #ECF0F1;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -12,8 +13,9 @@ body {
     box-sizing: border-box;
 }
 
+/* الحاويات */
 .container, .settings-container {
-    background-color: #34495E; /* Darker Blue-Gray */
+    background-color: #34495E;
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -22,8 +24,9 @@ body {
     text-align: center;
 }
 
+/* العناوين */
 h1 {
-    color: #3498DB; /* Bright Blue */
+    color: #3498DB;
     font-size: 2.5em;
     margin-bottom: 10px;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
@@ -36,10 +39,11 @@ h3 {
 }
 
 p {
-    color: #BDC3C7; /* Light Gray */
+    color: #BDC3C7;
     font-size: 1em;
 }
 
+/* حالة النظام */
 .status-box {
     margin-top: 20px;
     padding: 15px;
@@ -50,17 +54,18 @@ p {
 }
 
 .inactive {
-    background-color: #27AE60; /* Green */
+    background-color: #27AE60;
 }
 
 .active {
-    background-color: #C0392B; /* Red */
+    background-color: #C0392B;
 }
 
 .arming {
-    background-color: #F39C12; /* Orange */
+    background-color: #F39C12;
 }
 
+/* الأزرار */
 .controls {
     display: flex;
     flex-direction: column;
@@ -76,28 +81,32 @@ p {
     font-size: 1.1em;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.1s ease;
+    touch-action: manipulation; /* تحسين التفاعل على الموبايل */
 }
 
 .btn-primary {
-    background-color: #3498DB; /* Bright Blue */
+    background-color: #3498DB;
     color: white;
+    z-index: 10;
+    position: relative;
 }
 
 .btn-primary:hover {
-    background-color: #2980B9; /* Darker Blue */
+    background-color: #2980B9;
     transform: translateY(-2px);
 }
 
 .btn-secondary {
-    background-color: #7F8C8D; /* Gray */
+    background-color: #7F8C8D;
     color: white;
 }
 
 .btn-secondary:hover {
-    background-color: #95A5A6; /* Lighter Gray */
+    background-color: #95A5A6;
     transform: translateY(-2px);
 }
 
+/* الحقول */
 input[type="number"], input[type="text"], input[type="tel"], input[type="password"], select, input[type="file"] {
     width: calc(100% - 22px);
     padding: 10px;
@@ -118,6 +127,7 @@ label {
     font-weight: bold;
 }
 
+/* الحساسية */
 .sensitivity-control {
     margin-top: 20px;
     display: flex;
@@ -170,6 +180,7 @@ label {
     border-radius: 50%;
 }
 
+/* المودال */
 .modal {
     position: fixed;
     top: 0;
@@ -177,7 +188,7 @@ label {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    display: none; /* Hidden by default */
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -203,7 +214,7 @@ label {
     margin: 15px 0;
 }
 
-/* RTL Specific Styles for better alignment in Arabic */
+/* دعم RTL */
 body[dir="rtl"] .settings-container label {
     text-align: right;
 }
@@ -223,6 +234,7 @@ body[dir="rtl"] input[type="password"] {
     text-align: right;
 }
 
+/* استجابة الموبايل */
 @media (max-width: 600px) {
     .container, .settings-container {
         padding: 20px;
