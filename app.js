@@ -1,63 +1,65 @@
-  
-  
-  document.addEventListener('DOMContentLoaded', () => {
-    // تحديد الصفحة الحالية
+
+// app.js
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
     const isSettingsPage = window.location.pathname.includes('settings.html');
     const isVerifyPage = window.location.pathname.includes('verify.html');
     const isIndexPage = !isSettingsPage && !isVerifyPage;
 
-    // زر "عودة" داخل مودال الإعدادات
     const returnFromSettingsBtn = document.getElementById("return-from-settings");
     if (returnFromSettingsBtn) {
         returnFromSettingsBtn.addEventListener("click", () => {
             document.getElementById("pin-modal-settings").style.display = "none";
-            localStorage.setItem('isPinVerified', 'false'); // إلغاء التحقق عند العودة
+            localStorage.setItem('isPinVerified', 'false');
         });
     }
 
-    // زر "عودة" داخل مودال إلغاء الحماية
     const returnFromDeactivateBtn = document.getElementById("return-from-deactivate");
     if (returnFromDeactivateBtn) {
         returnFromDeactivateBtn.addEventListener("click", () => {
             document.getElementById("pin-modal-index").style.display = "none";
-            localStorage.setItem('isPinVerified', 'false'); // إلغاء التحقق عند العودة
+            localStorage.setItem('isPinVerified', 'false');
         });
     }
 
-    // ✅ مراقبة خروج المستخدم من التطبيق
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
-            // المستخدم خرج من التطبيق
             localStorage.setItem('protectionPaused', 'true');
-            localStorage.setItem('isPinVerified', 'false'); // إعادة ضبط التحقق
+            localStorage.setItem('isPinVerified', 'false');
         } else {
-            // رجع للتطبيق
             const wasPaused = localStorage.getItem('protectionPaused') === 'true';
             const isVerified = localStorage.getItem('isPinVerified') === 'true';
 
             if (wasPaused && !isVerified) {
                 localStorage.setItem('protectionPaused', 'false');
-				
                 const modal = document.getElementById('pin-modal-index');
                 if (modal) {
-                    modal.style.display = 'flex'; // عرض مودال كلمة السر
+                    modal.style.display = 'flex';
                 }
             }
         }
     });
 
 
-  
-  const defaultSounds = {
+
+
+
+const defaultSounds = {
     'alert.mp3': 'assets/alert.mp3',
     'alert2.mp3': 'assets/alert2.mp3',
     'alert3.mp3': 'assets/alert3.mp3'
 };
 
-  
-  
-  
-  
+
+
+
+
+
+
+
+
     // Localization strings for multiple languages.
     const translations = {
         'en': {
@@ -704,6 +706,8 @@
         updateUIWithTranslation();
     }
     
+	
+	
     function updateUIWithTranslation() {
         const t = translations[currentLang];
         
@@ -1264,122 +1268,77 @@
             }
         });
 
-
-
-// ----------------------------------------------------
-// End of Back Button & Power Button Prevention Logic
-// ----------------------------------------------------
-
-loadSettings();
-updateUI('inactive');
-requestNotificationPermission();
-resetIdleTimer(); // Start the idle timer initially
-
-// دالة التعامل مع الحركة
-function handleMotion(event) {
-    resetIdleTimer();
-
-    if (!alertEnabled && !isArmed) return;
-
-    let acc = event.accelerationIncludingGravity;
-    let currentTime = Date.now();
-
-    if ((Math.abs(acc.x) > currentThreshold.x || 
-        Math.abs(acc.y) > currentThreshold.y || 
-        Math.abs(acc.z) > currentThreshold.z)) {
+        // ----------------------------------------------------
+        // End of Back Button & Power Button Prevention Logic
+        // ----------------------------------------------------
         
-        if (alertEnabled && (currentTime - lastAlertTime > alertCooldown)) {
-            lastAlertTime = currentTime;
-            motionStatus.textContent = '🚨 ' + translations[currentLang].motion_detected;
-            audio.play();
-            sendNotification(translations[currentLang].motion_detected);
-        } else if (isArmed) {
-            alertEnabled = true;
-            isArmed = false;
-            updateUI('active');
-            motionStatus.textContent = '🚨 ' + translations[currentLang].motion_detected;
-            audio.play();
-            sendNotification(translations[currentLang].motion_detected);
-        }
+        loadSettings();
+        updateUI('inactive');
+        requestNotificationPermission();
+        resetIdleTimer(); // Start the idle timer initially
     }
-}
 
-// طلب إذن لاستخدام حساس الحركة (مطلوب على iOS وبعض المتصفحات)
-if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-    DeviceMotionEvent.requestPermission()
-        .then(response => {
-            if (response === 'granted') {
-                window.addEventListener('devicemotion', handleMotion);
+    if (isVerifyPage) {
+        const recoveryMobileInput = document.getElementById('recovery-mobile');
+        const verifyMobileBtn = document.getElementById('verify-mobile-btn');
+        const newPinContainer = document.getElementById('new-pin-container');
+        const newRecoveryPinInput = document.getElementById('new-recovery-pin');
+        const confirmRecoveryPinInput = document.getElementById('confirm-recovery-pin');
+        const saveNewPinBtn = document.getElementById('save-new-pin-btn');
+        const backBtn = document.getElementById('back-btn');
+        const userNameInput = document.getElementById('recovery-username');
+
+        verifyMobileBtn.addEventListener('click', () => {
+            const recoveryMobile = recoveryMobileInput.value.trim();
+            const userName = userNameInput.value.trim();
+            const savedSettings = JSON.parse(localStorage.getItem('motionAlertSettings'));
+            const savedMobileNumber = savedSettings.mobileNumber;
+            const savedUserName = savedSettings.userName;
+
+            if (recoveryMobile === savedMobileNumber && userName === savedUserName) {
+                showMessageModal(translations[currentLang].h1_verify, translations[currentLang].verification_success);
+                newPinContainer.style.display = 'block';
+                verifyMobileBtn.disabled = true;
+                recoveryMobileInput.disabled = true;
+                userNameInput.disabled = true;
             } else {
-                showMessageModal('إذن مرفوض', 'لن يتمكن التطبيق من كشف الحركة بدون إذن.');
+                showMessageModal(translations[currentLang].h1_verify, translations[currentLang].verification_error);
             }
-        })
-        .catch(console.error);
-} else {
-    window.addEventListener('devicemotion', handleMotion);
-}
-
-if (isVerifyPage) {
-    const recoveryMobileInput = document.getElementById('recovery-mobile');
-    const verifyMobileBtn = document.getElementById('verify-mobile-btn');
-    const newPinContainer = document.getElementById('new-pin-container');
-    const newRecoveryPinInput = document.getElementById('new-recovery-pin');
-    const confirmRecoveryPinInput = document.getElementById('confirm-recovery-pin');
-    const saveNewPinBtn = document.getElementById('save-new-pin-btn');
-    const backBtn = document.getElementById('back-btn');
-    const userNameInput = document.getElementById('recovery-username');
-
-    verifyMobileBtn.addEventListener('click', () => {
-        const recoveryMobile = recoveryMobileInput.value.trim();
-        const userName = userNameInput.value.trim();
-        const savedSettings = JSON.parse(localStorage.getItem('motionAlertSettings'));
-        const savedMobileNumber = savedSettings.mobileNumber;
-        const savedUserName = savedSettings.userName;
-
-        if (recoveryMobile === savedMobileNumber && userName === savedUserName) {
-            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].verification_success);
-            newPinContainer.style.display = 'block';
-            verifyMobileBtn.disabled = true;
-            recoveryMobileInput.disabled = true;
-            userNameInput.disabled = true;
-        } else {
-            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].verification_error);
-        }
-    });
-
-    saveNewPinBtn.addEventListener('click', () => {
-        const newPin = newRecoveryPinInput.value.trim();
-        const confirmPin = confirmRecoveryPinInput.value.trim();
-
-        if (!newPin || !confirmPin) {
-            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].fill_all_fields);
-            return;
-        }
-
-        if (newPin !== confirmPin) {
-            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_mismatch);
-            return;
-        }
-
-        if (newPin.length < 4) {
-            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_length_error);
-            return;
-        }
-
-        const savedSettings = JSON.parse(localStorage.getItem('motionAlertSettings'));
-        savedSettings.securityPin = newPin;
-        localStorage.setItem('motionAlertSettings', JSON.stringify(savedSettings));
-
-        showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_save_success);
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 2000);
-    });
-
-    if (backBtn) {
-        backBtn.addEventListener('click', () => {
-            window.location.href = 'index.html';
         });
+
+        saveNewPinBtn.addEventListener('click', () => {
+            const newPin = newRecoveryPinInput.value.trim();
+            const confirmPin = confirmRecoveryPinInput.value.trim();
+
+            if (!newPin || !confirmPin) {
+                showMessageModal(translations[currentLang].h1_verify, translations[currentLang].fill_all_fields);
+                return;
+            }
+
+            if (newPin !== confirmPin) {
+                showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_mismatch);
+                return;
+            }
+
+            if (newPin.length < 4) {
+                showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_length_error);
+                return;
+            }
+
+            const savedSettings = JSON.parse(localStorage.getItem('motionAlertSettings'));
+            savedSettings.securityPin = newPin;
+            localStorage.setItem('motionAlertSettings', JSON.stringify(savedSettings));
+
+            showMessageModal(translations[currentLang].h1_verify, translations[currentLang].pin_save_success);
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        });
+
+        if (backBtn) {
+            backBtn.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+        }
     }
-}
 });
