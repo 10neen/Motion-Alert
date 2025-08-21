@@ -48,15 +48,13 @@
 
 
   
+  const defaultSounds = {
+    'alert.mp3': 'assets/alert.mp3',
+    'alert2.mp3': 'assets/alert2.mp3',
+    'alert3.mp3': 'assets/alert3.mp3'
+};
+
   
-
-    // Default sound paths for the alert.
-    const defaultSounds = {
-        'alert.mp3': 'alert.mp3',
-        'alert2.mp3': 'alert2.mp3',
-        'alert3.mp3': 'alert3.mp3'
-    };
-
   
   
   
