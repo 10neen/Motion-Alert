@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="h1-index">نظام الحماية ضد الحركة</title>
+    <title>نظام الحماية ضد الحركة</title>
     <link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="assets/icon-192x192.png" type="image/png">
-
-
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/icon-192x192.png" type="image/png">
 </head>
 <body>
 
@@ -80,7 +78,6 @@
             <div class="modal-buttons">
                 <button id="pin-submit-btn-settings" class="btn-primary">موافق</button>
                 <button id="return-from-settings" class="btn-secondary">عودة</button>
-                <!-- إضافة زر "نسيت كلمة السر" -->
                 <button id="pin-forgot-btn" class="btn-secondary">نسيت كلمة السر؟</button>
             </div>
         </div>
@@ -95,24 +92,15 @@
         </div>
     </div>
     
-	<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(reg => console.log('Service Worker registered ✅'))
-      .catch(err => console.error('Service Worker failed ❌', err));
-  }
-</script>
-
-	
+    <!-- Scripts -->
     <script src="app.js"></script>
-	
-	<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(reg => console.log('Service Worker registered ✅'))
-      .catch(err => console.error('Service Worker failed ❌', err));
-  }
-</script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker registered ✅'))
+          .catch(err => console.error('Service Worker failed ❌', err));
+      }
+    </script>
 
 </body>
 </html>
