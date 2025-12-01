@@ -1,9 +1,8 @@
-
 {
   "name": "Motion Alert System",
   "short_name": "Motion Alert",
   "description": "A personal security app that detects device motion and sounds an alarm.",
-  "start_url": "/index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#2c2c2c",
   "theme_color": "#f0c400",
